@@ -44,6 +44,12 @@ public class ApiRequest<T:Form & Encodable, R:  Decodable> {
 
     }
     
+    public convenience init(delegate: ApiDelegate, endPoint: ApiEndpoint, method: ApiRequestMethod, needSignature: Bool){
+        
+        self.init(delegate: delegate, endPoint:endPoint, method:method.rawValue, needSignature: needSignature)
+
+    }
+    
     public convenience init( delegate: ApiDelegate, endPoint: ApiEndpoint, method: String) {
         
         self.init(delegate: delegate, endPoint:endPoint, method:method, needSignature: false)
@@ -65,6 +71,11 @@ public class ApiRequest<T:Form & Encodable, R:  Decodable> {
         
         var params : Dictionary<String, String> = Dictionary<String, String>.init()
         var headers : Dictionary<String, String> = Dictionary<String, String>.init()
+        
+        for pair in delegate.DefaultHeaders {
+            
+            headers[pair.key] = pair.value
+        }
         
         if let headerKeys = form?.Header?() {
             
